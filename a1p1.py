@@ -52,14 +52,44 @@ def output_directory(args):
                 for directory in directories:
                     output_directory([str(directory)] + args)
 
-def create_file():
-    pass
+def create_file(args):
+    try:
+        new_file = args[-1] + ".dsu"
+        path = Path(args[0]) / new_file
+        path.touch()
+        print(path)
+        return path
+    except FileExistsError:
+        print(f"Error: File Already Exists: {path}")
+    except Exception as e:
+        print(f"Unexpected Error Occurred: {e}")
 
-def delete_file():
-    pass
+def delete_file(args):
+    path = Path(args[0])
 
-def read_file():
-    pass
+    try:
+        if path.exists():
+            path.unlink()
+            return print(f"{path} DELETED")
+    except FileNotFoundError:
+        print(f"ERROR: File not found: {path}")
+    except Exception as e:
+        print(f"Unexpected Error Occurred: {e}")
+
+def read_file(args):
+    path = Path(args[0])
+
+    if (path.stat().st_size == 0) is True:
+        print("EMPTY")
+    else:
+        try:
+            with open(path, "r") as file:
+                content = file.read()
+                print(content)
+        except FileNotFoundError:
+            print(f"Error: File Not Found {path}")
+        except Exception as e:
+            print(f"Unexpected Error Occurred: {e}")
 
 def main():
     try:
@@ -76,16 +106,23 @@ def main():
                 else:
                     print("Error: Please enter a valid option.")
             elif command.lower() == "c":
-                pass
+                if args[1] == "-n":
+                    create_file(args)
             elif command.lower() == "d":
-                pass
+                if Path(args[0]).suffix.lower() != ".dsu":
+                    print("ERROR")
+                else:
+                    delete_file(args)
             elif command.lower() == "r":
-                pass
+                if Path(args[0]).suffix.lower() != ".dsu":
+                    print("ERROR")
+                else:
+                    read_file(args)
             else:
                 print("Error: Please enter a valid command and path")
                 continue
-    except:
-        print("Something went wrong. Please try again.")
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == '__main__':
     main()
