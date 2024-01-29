@@ -52,6 +52,15 @@ def output_directory(args):
                 for directory in directories:
                     output_directory([str(directory)] + args)
 
+def create_file():
+    pass
+
+def delete_file():
+    pass
+
+def read_file():
+    pass
+
 def main():
     try:
         while True:
@@ -66,6 +75,12 @@ def main():
                     print_directory(args)
                 else:
                     print("Error: Please enter a valid option.")
+            elif command.lower() == "c":
+                pass
+            elif command.lower() == "d":
+                pass
+            elif command.lower() == "r":
+                pass
             else:
                 print("Error: Please enter a valid command and path")
                 continue
