@@ -2,8 +2,6 @@
 # nkwan3@uci.edu
 # 76647093
 
-# file_path = Path("/Users/nicolekwan/Workspace/Test")
-
 from pathlib import Path
 
 def print_directory(args):
@@ -52,17 +50,17 @@ def output_directory(args):
                 for directory in directories:
                     output_directory([str(directory)] + args)
 
+# PART 2
+
 def create_file(args):
     try:
         new_file = args[-1] + ".dsu"
         path = Path(args[0]) / new_file
-        path.touch()
-        print(path)
-        return path
-    except FileExistsError:
-        print(f"Error: File Already Exists: {path}")
-    except Exception as e:
-        print(f"Unexpected Error Occurred: {e}")
+        path.touch(exist_ok=True)
+        return str(path)
+    except Exception:
+        print(f"ERROR")
+        return None
 
 def delete_file(args):
     path = Path(args[0])
@@ -71,10 +69,10 @@ def delete_file(args):
         if path.exists():
             path.unlink()
             return print(f"{path} DELETED")
-    except FileNotFoundError:
-        print(f"ERROR: File not found: {path}")
+        else:
+            print("ERROR")
     except Exception as e:
-        print(f"Unexpected Error Occurred: {e}")
+        return "ERROR"
 
 def read_file(args):
     path = Path(args[0])
@@ -85,16 +83,14 @@ def read_file(args):
         try:
             with open(path, "r") as file:
                 content = file.read()
-                print(content)
-        except FileNotFoundError:
-            print(f"Error: File Not Found {path}")
-        except Exception as e:
-            print(f"Unexpected Error Occurred: {e}")
+                print(content.strip())
+        except Exception:
+            print(f"ERROR")
 
 def main():
     try:
         while True:
-            user_input = input("Enter Command: ")
+            user_input = input("")
             command, *args = user_input.split()
             if command.lower() == 'q':
                 break
@@ -104,10 +100,12 @@ def main():
                 elif (args[-1] == "-r") or (len(args) == 1):
                     print_directory(args)
                 else:
-                    print("Error: Please enter a valid option.")
+                    print("ERROR: Please enter a valid option.")
             elif command.lower() == "c":
-                if args[1] == "-n":
-                    create_file(args)
+                try:
+                    print(create_file(args))
+                except:
+                    print("ERROR")
             elif command.lower() == "d":
                 if Path(args[0]).suffix.lower() != ".dsu":
                     print("ERROR")
@@ -116,13 +114,15 @@ def main():
             elif command.lower() == "r":
                 if Path(args[0]).suffix.lower() != ".dsu":
                     print("ERROR")
+                elif len(args) < 0:
+                    print("ERROR")
                 else:
                     read_file(args)
             else:
                 print("Error: Please enter a valid command and path")
                 continue
-    except Exception as e:
-        print(f"Error: {e}")
+    except Exception:
+        print(f"ERROR")
 
 if __name__ == '__main__':
     main()
